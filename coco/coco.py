@@ -8,13 +8,15 @@ __author__ = 'buptmiao'
 
 
 def getargs():
-    parse = argparse.ArgumentParser()
-    parse.add_argument('-i', type=str, help="print the encoding of the input file")
-    parse.add_argument('-o', type=str, help="specify the encoding of output file, utf-8 by defaul")
-    parse.add_argument('src', help="input file")
-    parse.add_argument('dst', help="output file")
+    parse = argparse.ArgumentParser(prog='CoCo')
+    parse.add_argument('--version', '-v', action='version', version='%(prog)s 0.0.1')
+    parse.add_argument('-i', nargs='+', help="print the encoding of the input files")
+    parse.add_argument('-o', type=str, help="specify the encoding of output file, utf-8 by default")
+    parse.add_argument('src', nargs='?', help="input file")
+    parse.add_argument('dst', nargs='?', help="output file")
     args = parse.parse_args()
-    return vars(args)
+
+    return parse, args
 
 
 def readfile(src, encoding):
@@ -32,49 +34,41 @@ def detect(src):
         with open(src, 'rb') as f:
             data = f.read(1024)
             return chardet.detect(data)['encoding']
-    except AttributeError as e:
+    except Exception as e:
         print(e)
-        usage()
+        raise e
 
 
 def convert(src, dst, dstco):
     try:
         srcco = detect(src)
+        if srcco == 'gb2312' or srcco == 'GB2312':
+            srcco = 'gb18030'
         content = readfile(src, encoding=srcco)
         writefile(dst, content, encoding=dstco)
     except Exception as e:
         print(e)
-        usage()
-
-
-def usage():
-    print("Usage: coco [OPTIONS] src dst")
-    print("       coco [ --help | -v | --version ]")
-    print("")
-    print("A code convert tool\n")
-    print("Options:\n")
-    print("  -i input              print the encoding of the input file")
-    print("  -o encoding           specify the encoding of output file, utf-8 by default")
-    print("")
-    print("Example:\n")
-    print("  coco -i test.txt")
-    print("  coco -o utf-8 foo.txt bar.txt")
-    print("  coco foo.txt bar.txt")
-    pass
+        raise e
 
 
 def start():
-    args = getargs()
-    if args['i'] is not None:
-        print(detect(args['i']))
-        exit()
-    src = args['src']
-    dst = args['dst']
-    outencoding = args['o']
-    if outencoding is None:
-        outencoding = 'utf-8'
-    convert(src, dst, outencoding)
-    exit()
+    parse, args = getargs()
+    try:
+        if args.i is not None:
+            for file in args.i:
+                print(file, detect(file))
+            exit()
+        src = args.src
+        dst = args.dst
+        if src is None or dst is None:
+            parse.print_help()
+            exit()
+        encoding = args.o
+        if encoding is None:
+            encoding = 'utf-8'
+        convert(src, dst, encoding)
+    except Exception as e:
+        parse.print_help()
 
 
 if __name__ == '__main__':

@@ -2,8 +2,8 @@
 from setuptools import setup
 
 setup(
-    name='coco',
-    version='1.0.0',
+    name='cocov',
+    version='0.0.1',
     packages=['coco'],  # 代码所在包
     url='https://github.com/buptmiao/CoCo',
     license='MIT License',
