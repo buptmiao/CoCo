@@ -6,4 +6,6 @@ python:
 install: python setup.py install
 
 script:
-- "./tests/test.sh"
+- "cd tests"
+- "./test.sh"
+- "cd -"
