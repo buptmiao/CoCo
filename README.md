@@ -39,7 +39,7 @@ optional arguments:
 
 ## Examples
 
-1. check the encoding of files
+* check the encoding of files
 ```
 > coco -i foo.csv
 foo.csv utf-8
@@ -48,7 +48,7 @@ foo.csv utf-8
 foo.csv utf-8
 bar.csv gb2312
 ```
-2. convert encoding of files
+* convert encoding of files
 ```
 > coco -i foo.csv
 foo.csv utf-8
@@ -64,7 +64,7 @@ bar.csv gb2312
 bar.csv gb2312
 utf.csv utf-8
 ```
-3. if -o option is not specified, utf-8 is used by default
+* if -o option is not specified, utf-8 is used by default
 
 ```
 > coco -o utf-8 bar.csv utf.csv
