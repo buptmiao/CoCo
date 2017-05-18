@@ -3,6 +3,7 @@
 import codecs
 import chardet
 import argparse
+import six
 
 __author__ = 'buptmiao'
 
@@ -56,7 +57,7 @@ def start():
     try:
         if args.i is not None:
             for file in args.i:
-                print(file, detect(file))
+                six.print_((file, detect(file)))
             exit()
         src = args.src
         dst = args.dst
